@@ -54,7 +54,6 @@ local abs = math.abs
 
         directory = "inactivity",
         folders = {
-            "/sounds",
             "/fonts",
             "/configs"
         },
@@ -63,7 +62,7 @@ local abs = math.abs
 
     local flags = library.flags
     local config_flags = library.config_flags
-
+    
     local themes = {
         preset = {
             ["outline"] = rgb(32, 32, 38), -- 
@@ -316,7 +315,7 @@ local abs = math.abs
             local list = {};
         
             for idx, file in next, listfiles(library.directory .. "/configs") do
-                local name = file:gsub(library.directory .. "/configs\\", ""):gsub(".cfg", "")
+                local name = file:gsub(library.directory .. "/configs\\", ""):gsub(library.directory .. "\\configs\\", ""):gsub(".cfg", "")
                 list[#list + 1] = name;
             end;
             
@@ -532,7 +531,7 @@ local abs = math.abs
                 })
                 
                 local glow = library:create("ImageLabel", {
-                    Parent = __holder,
+                    Parent = accent_line,
                     Name = "",
                     ImageColor3 = themes.preset.accent,
                     ScaleType = Enum.ScaleType.Slice,
@@ -1633,9 +1632,9 @@ local abs = math.abs
                     Name = "",
                     Rotation = 90,
                     Color = ColorSequence.new{
-                    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
-                    ColorSequenceKeypoint.new(1, Color3.fromRGB(167, 167, 167))
-                }
+                        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+                        ColorSequenceKeypoint.new(1, Color3.fromRGB(167, 167, 167))
+                    }
                 })
                 
                 local contrast = library:create("Frame", {
@@ -1684,7 +1683,7 @@ local abs = math.abs
                     FontFace = library.font,
                     TextColor3 = Color3.fromRGB(180, 180, 180),
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
-                    Text = "Display Name: niggerkiller290",
+                    Text = "Display Name: ...",
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
                     TextXAlignment = Enum.TextXAlignment.Left,
@@ -1705,7 +1704,7 @@ local abs = math.abs
                     FontFace = library.font,
                     TextColor3 = Color3.fromRGB(180, 180, 180),
                     BorderColor3 = Color3.fromRGB(0, 0, 0),
-                    Text = "Name: Itouchkids123",
+                    Text = "Name: ...",
                     BorderSizePixel = 0,
                     BackgroundTransparency = 1,
                     TextXAlignment = Enum.TextXAlignment.Left,
@@ -3438,6 +3437,10 @@ local abs = math.abs
             })
             
             function cfg.set(value)
+                if type(value) ~= "number" then 
+                    return 
+                end
+
                 cfg.value = math.clamp(library:round(value, cfg.intervals), cfg.min, cfg.max)
 
                 fill_inline.Size = dim2((cfg.value - cfg.min) / (cfg.max - cfg.min), 0, 1, 0)
@@ -3796,7 +3799,6 @@ local abs = math.abs
             }
 
             flags[cfg.flag] = {}
-            flags[cfg.flag]["animation"] = nil
             
             local dragging_sat = false 
             local dragging_hue = false 
@@ -4332,7 +4334,13 @@ local abs = math.abs
                 if alpha then 
                     a = alpha
                 end 
-                
+
+                local visual = alpha_inline:FindFirstChildOfClass("Frame")
+
+                if not visual then 
+                    return 
+                end
+
                 local hsv_position = Color3.fromHSV(h, s, v)
                 local Color = Color3.fromHSV(h, s, v)
                 
@@ -4343,10 +4351,10 @@ local abs = math.abs
                 local offset = (a < 1) and 0 or -4
                 alpha_cursor.Position = dim2(a, offset, 0, 0)
 
-                alpha_inline:FindFirstChildOfClass("Frame").BackgroundColor3 = Color
+                visual.BackgroundColor3 = Color
                 glow.ImageColor3 = Color
                 
-                local RGB_Format = alpha_inline:FindFirstChildOfClass("Frame").BackgroundColor3
+                local RGB_Format = visual.BackgroundColor3
 
                 icon_inline.BackgroundColor3 = Color3.fromRGB(RGB_Format.R / 4, RGB_Format.G / 4, RGB_Format.B / 4)
                 icon.BorderColor3 = Color3.fromRGB(math.floor((Color.R * 255) + 0.5) / 2, math.floor((Color.G * 255)+0.5) / 2, math.floor((Color.B * 255) + 0.5) / 2)
@@ -4365,8 +4373,10 @@ local abs = math.abs
                 cfg.color = Color
                 cfg.alpha = a
  
-                flags[cfg.flag]["Color"] = Color
-                flags[cfg.flag]["Transparency"] = a
+                flags[cfg.flag] = {
+                    Color = Color,
+                    Transparency = a
+                }
                 cfg.saved_color = hsv(s,s,v)
 
                 cfg.callback(Color, a)
@@ -4470,15 +4480,14 @@ local abs = math.abs
 
             task.spawn(function()
                 while true do 
-                    local anim = flags[cfg.flag]["animation"]
-                    if anim ~= "normal" then 
+                    if selected ~= "normal" then 
                         cfg.set(
                             hsv(
-                                anim == "rainbow" and library.sin or h, 
-                                anim == "rainbow" and 1 or s, 
-                                anim == "fade" and library.sin or v
+                                selected == "rainbow" and library.sin or h, 
+                                selected == "rainbow" and 1 or s, 
+                                selected == "fade" and library.sin or v
                             )
-                            , anim == "fade_alpha" and library.sin
+                            , selected == "fade_alpha" and library.sin
                         )
                     end 
                     task.wait() 
@@ -4925,7 +4934,7 @@ local abs = math.abs
                 cfg.callback() 
             end)
             
-             return setmetatable(cfg, library)  
+            return setmetatable(cfg, library)  
         end 
 
         function library:textbox(properties)
