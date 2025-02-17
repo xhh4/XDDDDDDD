@@ -43,7 +43,7 @@ local abs = math.abs
         notifications = {}, 
         instances = {},
         main_frame = {}, 
-
+        config_holder,
         current_tab, 
         current_element_open, 
         dock_button_holder,  
@@ -187,8 +187,6 @@ local abs = math.abs
     end 
     
     library.font = Font.new(getcustomasset(library.directory .. "/fonts/main_encoded.ttf"), Enum.FontWeight.Regular)
-    
-    local config_holder; 
 -- 
 
 -- functions 
@@ -310,7 +308,7 @@ local abs = math.abs
         end
 
         function library:config_list_update() 
-            if not config_holder then return end; 
+            if not library.config_holder then return end; 
         
             local list = {};
         
@@ -319,7 +317,7 @@ local abs = math.abs
                 list[#list + 1] = name;
             end;
             
-            config_holder:refresh_options(list)
+            library.config_holder:refresh_options(list)
         end 
 
         function library:get_config()
