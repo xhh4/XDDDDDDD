@@ -312,7 +312,7 @@ do -- Configs
     end})
 
     local configs_section = configs:section({name = "Configuration System", side = "left"})
-    config_holder = configs_section:dropdown({name = "Configs", items = {}, flag = "config_name_list"})
+    library.config_holder = configs_section:dropdown({name = "Configs", items = {}, flag = "config_name_list"})
     configs_section:textbox({flag = "config_name_text_box"})
     configs_section:button({name = "Create", callback = function()
         writefile(library.directory .. "/configs/" .. flags["config_name_text_box"] .. ".cfg", library:get_config())
