@@ -4,7 +4,7 @@ local flags = library.flags -- access flags from here.
 
 local window = library:window({
     name = "vaderpaste", 
-    size = UDim2.fromOffset(500, 650) 
+    size = UDim2.fromOffset(400, 450) 
 }) 
 
 local legit = window:tab({name = "legit"})
