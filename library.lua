@@ -65,14 +65,14 @@ local abs = math.abs
     
     local themes = {
         preset = {
-            ["outline"] = rgb(32, 32, 38), -- 
+            ["outline"] = rgb(218, 219, 221), -- 
             ["inline"] = rgb(60, 55, 75), --
-            ["accent"] = rgb(255, 182, 193), --
+            ["accent"] = rgb(218, 219, 221), --
             ["contrast"] = rgb(35, 35, 47),
             ["text"] = rgb(170, 170, 170),
             ["unselected_text"] = rgb(90, 90, 90),
             ["text_outline"] = rgb(0, 0, 0),
-            ["glow"] = rgb(255, 182, 193), 
+            ["glow"] = rgb(218, 219, 221), 
         }, 	
 
         utility = {
